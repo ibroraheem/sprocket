@@ -34,7 +34,7 @@ const register = async (req, res) => {
     const token = jwt.sign(
         { userId: user._id },
         process.env.JWT_SECRET,
-        { expiresIn: '12h' }
+        { expiresIn: '5y' }
     )
     res.status(201).send({
         message: 'User created successfully',
@@ -98,7 +98,7 @@ const login = async (req, res) => {
     const token = jwt.sign(
         { userId: user._id },
         process.env.JWT_SECRET,
-        { expiresIn: '12h' }
+        { expiresIn: '5y' }
     )
     res.status(200).send({
         message: 'Login successful',
