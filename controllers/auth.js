@@ -35,9 +35,36 @@ const register = async (req, res) => {
     res.status(201).send({
         message: 'User created successfully',
         email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         id: user._id,
         token
     })
+}
+
+const updateProfile = async (req, res) => {
+    try {
+        const { firstName, lastName, username } = req.body
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        const user = await User.findOne({ _id: decoded.userId })
+        if (!user) return res.status(404).send({ message: 'User not found' })
+        if (firstName) user.firstName = firstName
+        if (lastName) user.lastName = lastName
+        if (username) user.username = username
+        await user.save()
+        res.status(200).send({
+            message: 'User updated successfully',
+            email: user.email,
+            username: user.username,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            id: user._id
+        })
+    } catch (error) {
+        res.status(400).send({ message: error.message })
+    }
 }
 
 
@@ -74,6 +101,9 @@ const login = async (req, res) => {
     res.status(200).send({
         message: 'Login successful',
         email: user.email,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
         id: user._id,
         token
     })
