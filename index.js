@@ -8,6 +8,7 @@ require('dotenv').config();
 
 app.use(morgan('tiny'));    
 app.use(bodyParser.json());
+app.use(express.json({ extended: false }));
 app.use(cors());
 
 connectDB();
