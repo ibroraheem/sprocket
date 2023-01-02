@@ -30,8 +30,29 @@ const UserSchema = new mongoose.Schema({
     otp: {
         type: String,
         default: null
+    },
+    referralCode: {
+        type: String,
+        default: null
+    },
+    referrals: [{
+        avatar: {
+            type: String,
+
+        },
+        username: {
+            type: String,
+            unique: true,
+        },
+    }],
+    avatar: {
+        type: String,
+        default: null
+    },
+    referredBy: {
+        type: String,
+        default: null
     }
-    
 },
     { timestamps: true }
 )
