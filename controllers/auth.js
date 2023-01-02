@@ -30,6 +30,8 @@ const register = async (req, res) => {
                 avatar: newUser.avatar,
                 username: newUser.username
             })
+            referredUser.balance.referralBalance += 20
+            referredUser.balance.totalBalance += 20
             await referredUser.save()
             const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '5y' })
             res.status(201).send({
@@ -41,6 +43,7 @@ const register = async (req, res) => {
                 lastName: newUser.lastName,
                 id: newUser._id,
                 referrals: newUser.referrals,
+                balance: newUser.balance,
                 token
             })
         } else {
@@ -49,7 +52,7 @@ const register = async (req, res) => {
                 username,
                 firstName,
                 lastName,
-                password,
+                password: hashedPassword,
                 referralCode
             })
             const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '5y' })
@@ -62,6 +65,7 @@ const register = async (req, res) => {
                 lastName: newUser.lastName,
                 id: newUser._id,
                 referrals: newUser.referrals,
+                balance: newUser.balance,
                 token
             })
         }
@@ -91,6 +95,7 @@ const login = async (req, res) => {
             lastName: user.lastName,
             id: user._id,
             referrals: user.referrals,
+            balance: user.balance,
             token
         })
     } catch (error) {

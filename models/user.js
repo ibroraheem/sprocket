@@ -52,6 +52,25 @@ const UserSchema = new mongoose.Schema({
     referredBy: {
         type: String,
         default: null
+    },
+    balance: {
+        minedBalance: {
+            type: Number,
+            default: 0
+        },
+        referralBalance: {
+            type: Number,
+            default: 0
+        },
+        totalBalance: {
+            type: Number,
+            default: 0
+        },
+        isMining: {
+            type: Boolean,
+            default: false
+        },
+
     }
 },
     { timestamps: true }
