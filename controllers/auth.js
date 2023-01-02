@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const isEmail = require('email-validator')
+const referralCodes = require('referral-codes')
 const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
@@ -11,12 +12,17 @@ const register = async (req, res) => {
         if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
         if (password.length < 6) return res.status(400).send({ message: "Password must be at least 6 characters" })
         const hashedPassword = await bcrypt.hash(password, 10)
+        const referralCode = referralCodes.generate({
+            length: 8,
+            count: 1,
+            charset: referralCodes.charset('alphanumeric')
+        })
         const user = await User.findOne({ email: email.toLowerCase() })
         if (user) return res.status(400).send({ message: "User with Email already exists. Login" })
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy })
+            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0] })
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
@@ -31,11 +37,12 @@ const register = async (req, res) => {
                 username: newUser.username,
                 avatar: newUser.avatar,
                 referredBy: referred.firstName,
+                referralCode: newUser.referralCode,
                 balance: newUser.balance,
                 token
             })
         } else {
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName })
+            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referralCode: referralCode[0] })
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
                 message: "User created successfully",
@@ -44,6 +51,7 @@ const register = async (req, res) => {
                 lastName: newUser.lastName,
                 referrals: newUser.referrals,
                 username: newUser.username,
+                referralCode: newUser.referralCode,
                 avatar: newUser.avatar,
                 balance: newUser.balance,
                 token
