@@ -70,6 +70,10 @@ const UserSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         },
+        miningTime: {
+            type: Date,
+            default: null
+        },
 
     }
 },
