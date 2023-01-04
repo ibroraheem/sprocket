@@ -18,6 +18,7 @@ app.get('/status', (req, res) => {
     )
 })
 app.use('/', require('./routes/auth'))
+app.use('/', require('./routes/mining'))
 
 app.listen(process.env.PORT, () => {
     console.log(`Server started on port ${process.env.PORT}`)
