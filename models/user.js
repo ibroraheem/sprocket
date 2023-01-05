@@ -38,11 +38,9 @@ const UserSchema = new mongoose.Schema({
     referrals: [{
         avatar: {
             type: String,
-
         },
         username: {
             type: String,
-            unique: true,
         },
     }],
     avatar: {
