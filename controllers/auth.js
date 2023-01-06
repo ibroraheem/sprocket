@@ -3,14 +3,14 @@ const User = require('../models/user')
 const bcrypt = require('bcryptjs')
 const isEmail = require('email-validator')
 const referralCodes = require('referral-codes')
-const Cloudinary = require('./config/cloudinary')
+// const Cloudinary = require('./config/cloudinary')
 const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
     try {
         const { email, username, password, firstName, lastName, referredBy } = req.body
-        const avatar = req.file.path
-        if (!email || !username || !password || !firstName || !lastName || !avatar) return res.status(400).send({ message: "Please fill all fields" })
+        // const avatar = req.file.path
+        if (!email || !username || !password || !firstName || !lastName) return res.status(400).send({ message: "Please fill all fields" })
         if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
         if (password.length < 6) return res.status(400).send({ message: "Password must be at least 6 characters" })
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -24,7 +24,7 @@ const register = async (req, res) => {
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
-            const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
+            // const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
 
             const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username })
