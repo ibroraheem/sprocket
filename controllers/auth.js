@@ -69,7 +69,7 @@ const login = async (req, res) => {
         const user = await User.findOne({ email: email.toLowerCase() })
         if (!user) return res.status(401).send({ message: "User not found!" })
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
-        res.status.send({
+        res.status(200).send({
             message: "Login successful",
             email: user.email,
             firstName: user.firstName,
