@@ -3,7 +3,7 @@ const User = require('../models/user')
 
 const mine = async (req, res) => {
     try {
-        const token = req.authorization.split(' ')[1]
+        const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
@@ -17,7 +17,7 @@ const mine = async (req, res) => {
 
 const stopMining = async (req, res) => {
     try {
-        const token = req.authorization.split(' ')[1]
+        const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findOne(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
