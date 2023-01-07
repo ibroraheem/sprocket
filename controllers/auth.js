@@ -79,6 +79,7 @@ const login = async (req, res) => {
             firstName: user.firstName,
             lastName: user.lastName,
             referrals: user.referrals,
+            referralCode: user.referralCode,
             balance: user.balance,
             avatar: user.avatar,
             token,
