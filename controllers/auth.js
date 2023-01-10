@@ -7,6 +7,7 @@ const Cloudinary = require('../config/cloudinary')
 const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
+    console.log(req.body);
     try {
         const { email, username, password, firstName, lastName, referredBy } = req.body
         const avatar = req.file.path
@@ -67,6 +68,7 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
+    console.log(req.body);
     try {
         const { email, password } = req.body
         if (!email || !password) return res.status(401).send({ message: "All fields must be filled in!" })
