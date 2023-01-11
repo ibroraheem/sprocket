@@ -7,10 +7,9 @@ const Cloudinary = require('../config/cloudinary')
 const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
-    console.log(req.body);
     try {
-        const { email, username, password, firstName, lastName, referredBy } = req.body
-        const avatar = req.file.path
+        const { email, username, password, firstName, lastName, referredBy ,avatar} = req.body
+//         const avatar = req.file.path
         if (!email || !username || !password || !firstName || !lastName || !avatar) return res.status(400).send({ message: "Please fill all fields" })
         if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
         if (password.length < 6) return res.status(400).send({ message: "Password must be at least 6 characters" })
@@ -25,9 +24,12 @@ const register = async (req, res) => {
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
-            const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
+// //             const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
 
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
+//             const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
+            
+
+            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
@@ -47,7 +49,7 @@ const register = async (req, res) => {
                 token
             })
         } else {
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referralCode: referralCode[0] })
+            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referralCode: referralCode[0],avatar })
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
                 message: "User created successfully",
@@ -68,7 +70,7 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
-    console.log(req.body);
+    
     try {
         const { email, password } = req.body
         if (!email || !password) return res.status(401).send({ message: "All fields must be filled in!" })
