@@ -11,9 +11,9 @@ const register = async (req, res) => {
         const { email, username, password, firstName, lastName, referredBy ,avatar} = req.body
         console.log({ email, username, password, firstName, lastName, referredBy ,avatar});
 //         const avatar = req.file.path
-//         if (!email || !username || !password || !firstName || !lastName || !avatar) return res.status(400).send({ message: "Please fill all fields" })
-//         if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
-//         if (password.length < 6) return res.status(400).send({ message: "Password must be at least 6 characters" })
+        if (!email || !username || !password || !firstName || !lastName || !avatar) return res.status(400).send({ message: "Please fill all fields" })
+        if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
+        if (password.length < 6) return res.status(400).send({ message: "Password must be at least 6 characters" })
         const hashedPassword = await bcrypt.hash(password, 10)
         const referralCode = referralCodes.generate({
             length: 8,
