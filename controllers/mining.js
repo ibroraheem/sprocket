@@ -23,9 +23,11 @@ const stopMining = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findOne(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
+         if(user.balance.isMining){
         user.balance.isMining = false
         user.balance.minedBalance += 240
         await user.save()
+       }
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
