@@ -67,8 +67,8 @@ const register = async (req, res) => {
 }
 
 const login = async (req, res) => {
+    const { email, password } = req.body
     try {
-        const { email, password } = req.body
         if (!email || !password) return res.status(401).send({ message: "All fields must be filled in!" })
         const user = await User.findOne({ email: email.toLowerCase() })
         if (!user) return res.status(401).send({ message: "User not found!" })
@@ -89,4 +89,21 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = {register, login}
+const logout = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        if (!decoded) return res.status(401).send({ message: "Unauthorized" })
+        const user = await User.findOne({ _id: decoded.id })
+        if (!user) return res.status(401).send({ message: "Unauthorized" })
+        user.balance.isMining = false
+        user.balance.minedBalance += 0
+        user.balance.totalBalance += 0
+        await user.save()
+        res.status(200).send({ message: "Logout successful" })
+    } catch (error) {
+        res.status(500).send({ message: error.message})
+    }
+}
+
+module.exports = {register, login, logout}
