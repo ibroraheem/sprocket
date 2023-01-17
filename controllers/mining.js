@@ -12,7 +12,7 @@ const mine = async (req, res) => {
         user.balance.miningTime = Date.now();
         await user.save();
        }
-       res.status(200);
+       res.status(200).send({ message: 'mined' });
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
@@ -29,7 +29,7 @@ const stopMining = async (req, res) => {
         user.balance.minedBalance += 240
         await user.save()
        }
-        res.status(200);
+        res.status(200).send({ message: 'mining stoped' });
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
