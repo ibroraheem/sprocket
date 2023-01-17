@@ -23,7 +23,7 @@ const register = async (req, res) => {
         const user = await User.findOne({ email: email.toLowerCase() })
         if (user) return res.status(400).send({ message: "User with Email already exists. Login" })
             const _username = await User.findOne({ username: username.toLowerCase() })
-        if (_username) return res.status(400).send({ message: "User with Email already exists. Login" })
+        if (_username) return res.status(400).send({ message: "Username already taken" })
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
