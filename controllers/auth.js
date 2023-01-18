@@ -33,7 +33,7 @@ const register = async (req, res) => {
             
 
             const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
-            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username })
+            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified, })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
             await referred.save()
