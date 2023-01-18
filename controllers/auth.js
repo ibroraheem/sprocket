@@ -48,7 +48,13 @@ const register = async (req, res) => {
                 avatar: newUser.avatar,
                 referredBy: referred.firstName,
                 referralCode: newUser.referralCode,
-                balance: newUser.balance,
+                balance: {
+                    minedBalance: 1,
+                    referralBalance:0,
+                    totalBalance:0,
+                    isMining:false,
+                    miningTime: new Date().now(),
+                },
                 token
             })
         } else {
