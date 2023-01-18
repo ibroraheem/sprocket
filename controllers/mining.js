@@ -25,8 +25,11 @@ const stopMining = async (req, res) => {
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
          if(user.balance.isMining){
+        //Here I am adding the refferal earn also to the user, so is earning is determine base on his friends
+        let referralsEarnCount = user.referrals.length * 0.33;
+        let minedReward = 240 + referralsEarnCount;
         user.balance.isMining = false
-        user.balance.minedBalance += 240
+        user.balance.minedBalance += minedReward;
         await user.save()
        }
         res.status(200).send({ message: 'mining stoped' });
