@@ -53,7 +53,7 @@ const register = async (req, res) => {
                     referralBalance:0,
                     totalBalance:0,
                     isMining:false,
-                    miningTime: null,
+                    miningTime: new Date(),
                 },
                 token
             })
