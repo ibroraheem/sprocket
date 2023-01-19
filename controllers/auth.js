@@ -128,6 +128,7 @@ const userInfo = async (req, res) => {
             lastName: user.lastName,
             referrals: user.referrals,
             referralCode: user.referralCode,
+            isVerified: user.isVerified
         })
     } catch (error) {
         res.status(500).send({ message: error.message})
