@@ -22,16 +22,18 @@ const register = async (req, res) => {
         })
         const user = await User.findOne({ email: email.toLowerCase() })
         if (user) return res.status(400).send({ message: "User with Email already exists. Login" })
+            const _username = await User.findOne({ username: username.toLowerCase() })
+        if (_username) return res.status(400).send({ message: "Username already taken" })
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
 // //             const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
 
-//             const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
+//             const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
             
 
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
-            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username })
+            const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
+            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified, })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
             await referred.save()
@@ -46,11 +48,17 @@ const register = async (req, res) => {
                 avatar: newUser.avatar,
                 referredBy: referred.firstName,
                 referralCode: newUser.referralCode,
-                balance: newUser.balance,
+                balance: {
+                    minedBalance: 1,
+                    referralBalance:0,
+                    totalBalance:0,
+                    isMining:false,
+                    miningTime: new Date(),
+                },
                 token
             })
         } else {
-            const newUser = await User.create({ email: email.toLowerCase(), username, password: hashedPassword, firstName, lastName, referralCode: referralCode[0],avatar })
+            const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referralCode: referralCode[0],avatar })
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
                 message: "User created successfully",

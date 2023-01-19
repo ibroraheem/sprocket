@@ -12,6 +12,7 @@ const mine = async (req, res) => {
         user.balance.miningTime = Date.now();
         await user.save();
        }
+       res.status(200).send({ message: 'mined' });
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
@@ -21,13 +22,17 @@ const stopMining = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne(decoded.id)
+        const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
          if(user.balance.isMining){
+        //Here I am adding the refferal earn also to the user, so is earning is determine base on his friends
+        let referralsEarnCount = user.referrals.length * 0.33;
+        let minedReward = 240 + referralsEarnCount;
         user.balance.isMining = false
-        user.balance.minedBalance += 240
+        user.balance.minedBalance += minedReward;
         await user.save()
        }
+        res.status(200).send({ message: 'mining stoped' });
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
