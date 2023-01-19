@@ -121,10 +121,7 @@ const userInfo = async (req, res) => {
         if (!decoded) return res.status(401).send({ message: "Unauthorized" })
         const user = await User.findOne({ _id: decoded.id })
         if (!user) return res.status(401).send({ message: "Unauthorized" })
-        res.status(200).send({
-            message: "User info retrieved successfully",
-            referrals: user.referrals,
-        })
+        res.status(200).send(user.referrals)
     } catch (error) {
         res.status(500).send({ message: error.message})
     }
