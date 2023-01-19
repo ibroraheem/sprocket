@@ -28,7 +28,7 @@ const register = async (req, res) => {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
             const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
-            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified, })
+            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: false })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
             await referred.save()
@@ -123,12 +123,7 @@ const userInfo = async (req, res) => {
         if (!user) return res.status(401).send({ message: "Unauthorized" })
         res.status(200).send({
             message: "User info retrieved successfully",
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
             referrals: user.referrals,
-            referralCode: user.referralCode,
-            isVerified: user.isVerified
         })
     } catch (error) {
         res.status(500).send({ message: error.message})
