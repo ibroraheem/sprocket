@@ -27,11 +27,6 @@ const register = async (req, res) => {
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
-// //             const result = await Cloudinary.uploader.upload(avatar, { folder: "avatars" })
-
-//             const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar: result.secure_url })
-            
-
             const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified, })
             referred.balance.referralBalance += 20
@@ -90,6 +85,7 @@ const login = async (req, res) => {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
+            username: user.username,
             referrals: user.referrals,
             referralCode: user.referralCode,
             balance: user.balance,
