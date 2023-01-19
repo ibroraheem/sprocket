@@ -110,4 +110,24 @@ const logout = async (req, res) => {
     }
 }
 
-module.exports = {register, login, logout}
+const userInfo = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1]
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
+        if (!decoded) return res.status(401).send({ message: "Unauthorized" })
+        const user = await User.findOne({ _id: decoded.id })
+        if (!user) return res.status(401).send({ message: "Unauthorized" })
+        res.status(200).send({
+            message: "User info retrieved successfully",
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            referrals: user.referrals,
+            referralCode: user.referralCode,
+        })
+    } catch (error) {
+        res.status(500).send({ message: error.message})
+    }
+}
+
+module.exports = {register, login, logout, userInfo}
