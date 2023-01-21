@@ -62,49 +62,26 @@ const getUser = async (req, res) => {
     }
 }
 
-const getTotalRegisteredUsers = async (req, res) => {
+const getAnalytics = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const admin = await Admin.findOne({ _id: decoded.id })
         if (!admin) return res.status(401).json({ message: "Unauthorized" })
         const users = await User.find({})
-        res.status(200).json({ totalRegisteredUsers: users.length })
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-}
-
-const getTotalRegisteredUsersToday = async (req, res) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const admin = await Admin.findOne({ _id: decoded.id })
-        if (!admin) return res.status(401).json({ message: "Unauthorized" })
         const today = new Date()
-        const users = await User.find({ createdAt: { $gte: today } })
-        res.status(200).json({ totalRegisteredUsersToday: users.length })
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
-}
-
-const getTotalMinedBalance = async (req, res) => {
-    try {
-        const token = req.headers.authorization.split(' ')[1]
-        const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const admin = await Admin.findOne({ _id: decoded.id })
-        if (!admin) return res.status(401).json({ message: "Unauthorized" })
-        const users = await User.find({})
-        let totalMinedBalance = 0
+        const todayUsers = await User.find({ createdAt: { $gte: today } })
+        
+         let totalMinedBalance = 0
         users.forEach(user => {
             totalMinedBalance += user.balance.totalBalance
         })
-        res.status(200).json({ totalMinedBalance })
-        
+        res.status(200).json({ totalRegisteredUsers: users.length ,totalRegisteredUsersToday: todayUsers.length, totalMinedBalance})
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
 }
 
-module.exports = { register, login, getUsers, getUser, getTotalRegisteredUsers, getTotalRegisteredUsersToday, getTotalMinedBalance }
+
+
+module.exports = { register, login, getUsers, getUser,getAnalytics }
