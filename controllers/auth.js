@@ -27,8 +27,10 @@ const register = async (req, res) => {
         if (referredBy) {
             const referred = await User.findOne({referralCode: referredBy})
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
-            const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar});
-            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified, })
+            const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar, balance: {
+                    minedBalance: 1
+                },});
+            referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: false })
             referred.balance.referralBalance += 20
             referred.balance.totalBalance += 20
             await referred.save()
@@ -43,13 +45,7 @@ const register = async (req, res) => {
                 avatar: newUser.avatar,
                 referredBy: referred.firstName,
                 referralCode: newUser.referralCode,
-                balance: {
-                    minedBalance: 1,
-                    referralBalance:0,
-                    totalBalance:0,
-                    isMining:false,
-                    miningTime: new Date(),
-                },
+                balance: newUser.balance,
                 token
             })
         } else {
@@ -121,15 +117,7 @@ const userInfo = async (req, res) => {
         if (!decoded) return res.status(401).send({ message: "Unauthorized" })
         const user = await User.findOne({ _id: decoded.id })
         if (!user) return res.status(401).send({ message: "Unauthorized" })
-        res.status(200).send({
-            message: "User info retrieved successfully",
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            referrals: user.referrals,
-            referralCode: user.referralCode,
-            isVerified: user.isVerified
-        })
+        res.status(200).send(user.referrals)
     } catch (error) {
         res.status(500).send({ message: error.message})
     }
