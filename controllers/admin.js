@@ -74,7 +74,7 @@ const getAnalytics = async (req, res) => {
         
          let totalMinedBalance = 0
         users.forEach(user => {
-            totalMinedBalance += user.balance.totalBalance
+            totalMinedBalance += user.balance.minedBalance + user.balance.referralBalance
         })
         res.status(200).json({ totalRegisteredUsers: users.length ,totalRegisteredUsersToday: todayUsers.length, totalMinedBalance})
     } catch (error) {
