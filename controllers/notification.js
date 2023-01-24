@@ -40,7 +40,7 @@ const updateNotification = async (req, res) => {
         const notification = await Notification.findOneAndUpdate({ _id: id })
         notification.viewers.push(user.username);
         await notification.save();
-        res.status(200).json({ message: 'user viewer' });
+        res.status(200).json({ message: 'notification viewed' });
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
