@@ -8,6 +8,4 @@ router.get('/', getNotifications);
 router.get('/:id', getNotification);
 router.delete('/:id', deleteNotification);
 
-
-
 module.exports = router;
