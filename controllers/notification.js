@@ -9,7 +9,7 @@ const newNotification = async (req, res) => {
         const { title, content } = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const admin = await Admin.findOne({ _id: decoded.id })
+        const admin = await Admin.findOne({ _id: decoded.id }).sort({ "updatedAt": -1 })
         if (!admin) return res.status(401).json({ message: "Unauthorized" })
         const notification = await Notification.create({ title, content })
         res.status(200).json(notification)
