@@ -38,6 +38,7 @@ const updateNotification = async (req, res) => {
         if (!user) return res.status(401).send({ message: "User not found!" })
         if (!token) return res.status(401).json({ message: "Unauthorized" })
         const notification = await Notification.findOneAndUpdate({ _id: id });
+        console.log(notification);
         if (!notification.viewers.includes(user.username)) {
             notification.viewers.push(user.username);
             await notification.save();
