@@ -33,10 +33,11 @@ const updateNotification = async (req, res) => {
     try {
         const { id } = req.params
         const token = req.headers.authorization.split(' ')[1]
-        if (!token) return res.status(401).json({ message: "Unauthorized" })
-        const notification = await Notification({ _id: id })
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" })
+        if (!token) return res.status(401).json({ message: "Unauthorized" })
+        const notification = await Notification({ _id: id })
         notification.viewers.push(user.username);
         await notification.save();
         res.status(200).json({ message: 'user viewer' });
