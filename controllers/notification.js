@@ -9,7 +9,7 @@ const newNotification = async (req, res) => {
         const { title, content } = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const admin = await Admin.findOne({ _id: decoded.id }).sort({ "updatedAt": -1 })
+        const admin = await Admin.findOne({ _id: decoded.id })
         if (!admin) return res.status(401).json({ message: "Unauthorized" })
         const notification = await Notification.create({ title, content })
         res.status(200).json(notification)
@@ -22,7 +22,7 @@ const getNotifications = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) return res.status(401).json({ message: "Unauthorized" })
-        const notifications = await Notification.find({})
+        const notifications = await Notification.find({}).sort({ "createdAt": -1 })
         res.status(200).json(notifications)
     } catch (error) {
         res.status(500).json({ error: error.message })
