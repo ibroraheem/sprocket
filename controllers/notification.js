@@ -38,6 +38,8 @@ const updateNotification = async (req, res) => {
         if (!user) return res.status(401).send({ message: "User not found!" })
         if (!token) return res.status(401).json({ message: "Unauthorized" })
         const notification = await Notification({ _id: id })
+        notification.title = notification.title;
+        notification.content = notification.content;
         notification.viewers.push(user.username);
         await notification.save();
         res.status(200).json({ message: 'user viewer' });
@@ -62,12 +64,12 @@ const deleteNotification = async (req, res) => {
 
 const newFeedBack = async (req, res) => {
     try {
-        const { title, content } = req.body
+        const { content } = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findOne({ _id: decoded.id })
         if (!user) return res.status(401).json({ message: "Unauthorized" })
-        const feedback = await FeedBack.create({ title, content })
+        const feedback = await FeedBack.create({ content })
         res.status(200).json(feedback)
     } catch (error) {
         res.status(500).json({ error: error.message })
