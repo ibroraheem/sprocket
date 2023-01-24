@@ -3,9 +3,11 @@ const router = express.Router();
 
 const { newNotification, getNotifications, getNotification, deleteNotification } = require('../controllers/notification');
 
-router.post('/register', register);
-router.post('/login', login);
-router.get('/users', getUsers);
-router.get('/user/:id', getUser);
+router.post('/new', newNotification);
+router.get('/', getNotifications);
+router.get('/:id', getNotification);
+router.delete('/:id', deleteNotification);
+
+
 
 module.exports = router;
