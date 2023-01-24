@@ -3,11 +3,9 @@ const mongoose = require('mongoose');
 const notificationSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true
     },
     content: {
         type: String,
-        required: true
     },
     viewers: {
         type: Array,
