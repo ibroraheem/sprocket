@@ -28,13 +28,17 @@ const getNotifications = async (req, res) => {
     }
 }
 
-const getNotification = async (req, res) => {
+const updateNotification = async (req, res) => {
     try {
         const { id } = req.params
         const token = req.headers.authorization.split(' ')[1]
         if (!token) return res.status(401).json({ message: "Unauthorized" })
         const notification = await Notification({ _id: id })
-        res.status(200).json(notification)
+        const user = await User.findById(decoded.id)
+        if (!user) return res.status(401).send({ message: "User not found!" })
+        notification.viewers.push(user.username);
+        await notification.save();
+        res.status(200).json({ message: 'user viewer' });
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -109,4 +113,4 @@ const deleteFeedBack = async (req, res) => {
     }
 }
 
-module.exports = { newNotification, getNotifications, getNotification, deleteNotification, newFeedBack, getFeedBacks, getFeedBack, deleteFeedBack }
+module.exports = { newNotification, getNotifications, updateNotification, deleteNotification, newFeedBack, getFeedBacks, getFeedBack, deleteFeedBack }
