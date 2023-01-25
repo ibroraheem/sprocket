@@ -9,6 +9,10 @@ const notificationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    links: {
+        type: Array,
+        default: []
+    }
     viewers: {
         type: Array,
         default: []
