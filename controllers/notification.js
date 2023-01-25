@@ -6,12 +6,12 @@ const User = require('../models/user')
 
 const newNotification = async (req, res) => {
     try {
-        const { title, content } = req.body
+        const { title, content ,links} = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const admin = await Admin.findOne({ _id: decoded.id })
         if (!admin) return res.status(401).json({ message: "Unauthorized" })
-        const notification = await Notification.create({ title, content })
+        const notification = await Notification.create({ title, content, links })
         res.status(200).json(notification)
     } catch (error) {
         res.status(500).json({ error: error.message })

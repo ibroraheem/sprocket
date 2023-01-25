@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema({
     links: {
         type: Array,
         default: []
-    }
+    },
     viewers: {
         type: Array,
         default: []
