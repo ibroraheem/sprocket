@@ -67,7 +67,8 @@ const newFeedBack = async (req, res) => {
         const { content } = req.body
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
-        const user = await User.findOne({ _id: decoded.id })
+        const user = await User.findOne({ _id: decoded.id });
+        console.log({ decoded, user });
         if (!user) return res.status(401).json({ message: "Unauthorized" })
         const feedback = await FeedBack.create({ content, email: user.email });
         res.status(200).json(feedback)
