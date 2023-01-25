@@ -42,6 +42,9 @@ const UserSchema = new mongoose.Schema({
         username: {
             type: String,
         },
+        isVerified: {
+            type: Boolean,
+        },
     }],
     avatar: {
         type: String,
