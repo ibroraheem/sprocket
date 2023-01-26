@@ -23,8 +23,12 @@ const stopMining = async (req, res) => {
         const token = req.headers.authorization.split(' ')[1]
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
-        if (!user) return res.status(401).send({ message: "User not found!" })
-        if (user.balance.isMining) {
+        if (!user) return res.status(401).send({ message: "User not found!" });
+
+        // date comparison
+        const date = new Date(user.balance.miningTime).getFullYear() + '-' + new Date(user.balance.miningTime).getMonth() + '-' + new Date(user.balance.miningTime).getDate();
+        const today = new Date(e).getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
+        if (user.balance.isMining && date !== today) {
             //Here I am adding the refferal earn also to the user, so is earning is determine base on his friends
             // referral length / 100 * 0.2 = team rate
             let referralsEarnCount = user.referrals.length / 100 * 0.2;
