@@ -83,7 +83,7 @@ const getAnalytics = async (req, res) => {
     }
 }
 
-const newVersion = async (req, res) => {
+const addVersion = async (req, res) => {
     try {
         const { version } = req.body
         const token = req.headers.authorization.split(' ')[1]
@@ -97,12 +97,12 @@ const newVersion = async (req, res) => {
     }
 }
 
-const getVersion = async (req, res) => {
+const getLatestVersion = async (req, res) => {
     try {
         const token = req.headers.authorization.split(' ')[1]
         if (!token) return res.status(401).json({ message: "Unauthorized" })
-        const version = await Version.find({}).sort({ "createdAt": -1 })
-        res.status(200).json(version[0])
+        const latestVersion = await Version.find({}).sort({ "createdAt": -1 })
+        res.status(200).json(latestVersion[0])
     } catch (error) {
         res.status(500).json({ error: error.message })
     }
@@ -110,4 +110,4 @@ const getVersion = async (req, res) => {
 
 
 
-module.exports = { register, login, getUsers, getUser, getAnalytics, newVersion, getVersion }
+module.exports = { register, login, getUsers, getUser, getAnalytics, addVersion, getLatestVersion }
