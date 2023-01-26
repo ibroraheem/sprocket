@@ -9,7 +9,7 @@ router.get('/users', getUsers);
 router.get('/user/:id', getUser);
 router.get('/analytics', getAnalytics);
 router.post('/new-version', newVersion);
-router.post('/versions', getVersion);
+router.get('/versions', getVersion);
 
 
 module.exports = router;
