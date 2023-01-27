@@ -77,6 +77,8 @@ const login = async (req, res) => {
         if (!email || !password) return res.status(401).send({ message: "All fields must be filled in!" })
         const user = await User.findOne({ email: email.toLowerCase() })
         if (!user) return res.status(401).send({ message: "User not found!" })
+        const isValid = await bcrypt.compare(password, user.password)
+        if (!isValid) return res.status(401).json({ message: "invalid Password" })
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
         res.status(200).send({
             message: "Login successful",
