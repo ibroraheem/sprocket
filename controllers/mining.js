@@ -27,7 +27,7 @@ const stopMining = async (req, res) => {
 
         // date comparison
         const date = new Date(user.balance.miningTime).getFullYear() + '-' + new Date(user.balance.miningTime).getMonth() + '-' + new Date(user.balance.miningTime).getDate();
-        const today = new Date(e).getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
+        const today = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
         if (user.balance.isMining && date !== today) {
             //Here I am adding the refferal earn also to the user, so is earning is determine base on his friends
             // referral length / 100 * 0.2 = team rate
