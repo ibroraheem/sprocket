@@ -8,8 +8,7 @@ const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
     try {
-        const { email, username, password, firstName, lastName, referredBy, avatar } = req.body
-        console.log({ email, username, password, firstName, lastName, referredBy, avatar });
+        const { email, username, password, firstName, lastName, referredBy, avatar } = req.body;
         //         const avatar = req.file.path
         if (!email || !username || !password || !avatar) return res.status(400).send({ message: "Please fill all fields" })
         if (!isEmail.validate(email)) return res.status(400).send({ message: "Please enter a valid email" })
