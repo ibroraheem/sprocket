@@ -120,7 +120,7 @@ const userInfo = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         if (!decoded) return res.status(401).send({ message: "Unauthorized" })
         const user = await User.findOne({ _id: decoded.id })
-        if (!user) return res.status(401).send({ message: "Unauthorized" })
+        if (!user) return res.status(401).send({ message: "Unauthorized" });
         res.status(200).send(user.referrals)
     } catch (error) {
         res.status(500).send({ message: error.message })
