@@ -32,8 +32,8 @@ const register = async (req, res) => {
                 },
             });
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified });
-            referred.balance.referralBalance += 20
-            referred.balance.totalBalance += 20
+            referred.balance.referralBalance += 10
+            referred.balance.totalBalance += 10
             await referred.save()
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
@@ -119,7 +119,7 @@ const userInfo = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         if (!decoded) return res.status(401).send({ message: "Unauthorized" })
         const user = await User.findOne({ _id: decoded.id })
-        if (!user) return res.status(401).send({ message: "Unauthorized" })
+        if (!user) return res.status(401).send({ message: "Unauthorized" });
         res.status(200).send(user.referrals)
     } catch (error) {
         res.status(500).send({ message: error.message })
