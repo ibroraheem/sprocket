@@ -10,7 +10,7 @@ const mine = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" });
-         // date comparison
+        // date comparison
         const date = new Date(user.balance.miningTime).getFullYear() + '-' + new Date(user.balance.miningTime).getMonth() + '-' + new Date(user.balance.miningTime).getDate();
         const today = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
         if (user.balance.isMining && date !== today) {
@@ -21,7 +21,7 @@ const mine = async (req, res) => {
             user.balance.isMining = false
             user.balance.minedBalance += minedReward;
             await user.save()
-        }else if (!user.balance.isMining) {
+        } else if (!user.balance.isMining) {
             user.balance.isMining = true;
             user.balance.miningTime = Date.now();
             await user.save();
@@ -51,7 +51,7 @@ const stopMining = async (req, res) => {
             user.balance.minedBalance += minedReward;
             await user.save()
         }
-        res.status(200).send({ message: 'mining stoped' });
+        res.status(200).send({ message: 'mining stopped' });
     } catch (error) {
         res.status(500).send({ message: error.message })
     }
