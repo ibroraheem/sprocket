@@ -10,9 +10,6 @@ const mine = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" });
-        // date comparison
-        const date = new Date(user.balance.miningTime).getFullYear() + '-' + new Date(user.balance.miningTime).getMonth() + '-' + new Date(user.balance.miningTime).getDate();
-        const today = new Date().getFullYear() + '-' + new Date().getMonth() + '-' + new Date().getDate();
      if (!user.balance.isMining) {
             user.balance.isMining = true;
             user.balance.miningTime = Date.now();
