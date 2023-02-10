@@ -57,15 +57,15 @@ const UserSchema = new mongoose.Schema({
     balance: {
         minedBalance: {
             type: Number,
-            default: 0
+            default: 0.0
         },
         referralBalance: {
             type: Number,
-            default: 0
+            default: 0.0
         },
         totalBalance: {
             type: Number,
-            default: 0
+            default: 0.0
         },
         isMining: {
             type: Boolean,
