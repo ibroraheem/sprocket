@@ -33,8 +33,8 @@ const register = async (req, res) => {
                 },
             });
             referred.referrals.push({ avatar: newUser.avatar, username: newUser.username, isVerified: newUser.isVerified });
-            referred.balance.referralBalance += 10
-            referred.balance.totalBalance += 10
+            referred.balance.referralBalance += 10.0
+            referred.balance.totalBalance += 10.0
             await referred.save()
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
