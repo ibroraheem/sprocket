@@ -22,12 +22,13 @@ const register = async (req, res) => {
         const user = await User.findOne({ email: email.toLowerCase() })
         if (user) return res.status(400).send({ message: "User with Email already exists. Login" })
         const _username = await User.findOne({ username: username.toLowerCase() })
-        if (_username) return res.status(400).send({ message: "Username already taken" })
+        if (_username) return res.status(400).send({ message: "Username already taken" });
+        let __username = username.replaceAll(" ", "_").toLowerCase();
         if (referredBy) {
             const referred = await User.findOne({ referralCode: referredBy })
             if (!referred) return res.status(400).send({ message: "Invalid referral code" })
             const newUser = await User.create({
-                email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar, balance: {
+                email: email.toLowerCase(), username: __username, password: hashedPassword, firstName, lastName, referredBy, referralCode: referralCode[0], avatar, balance: {
                     minedBalance: 1
                 },
             });
@@ -50,7 +51,7 @@ const register = async (req, res) => {
                 token
             })
         } else {
-            const newUser = await User.create({ email: email.toLowerCase(), username: username.toLowerCase(), password: hashedPassword, firstName, lastName, referralCode: referralCode[0], avatar })
+            const newUser = await User.create({ email: email.toLowerCase(), username: __username, password: hashedPassword, firstName, lastName, referralCode: referralCode[0], avatar })
             const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1500d' })
             res.status(201).send({
                 message: "User created successfully",
