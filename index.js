@@ -20,6 +20,7 @@ app.get('/status', (req, res) => {
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/', require('./routes/auth'))
 app.use('/', require('./routes/mining'))
+app.use('/grease-store', require('./routes/grease.store'))
 app.use('/admin', require('./routes/admin'))
 app.use('/notification', require('./routes/notification'))
 app.use('/feedback', require('./routes/feedback'))

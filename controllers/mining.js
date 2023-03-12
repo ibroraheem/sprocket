@@ -10,7 +10,7 @@ const mine = async (req, res) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET)
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" });
-     if (!user.balance.isMining) {
+        if (!user.balance.isMining) {
             user.balance.isMining = true;
             user.balance.miningTime = Date.now();
             await user.save();
@@ -35,7 +35,12 @@ const stopMining = async (req, res) => {
             //Here I am adding the referral earn also to the user, so is earning is determine base on his friends
             // referral length / 100 * 0.2 = team rate
             let referralsEarnCount = user.referrals.length / 100 * 0.2;
-            let minedReward = dailyEarn + referralsEarnCount; // mining reward
+            let minedReward = dailyEarn + referralsEarnCount;
+            console.log({ minedReward });
+            if (user.mspoc.grease.expireDate > new Date().getTime()) {
+                minedReward = (dailyEarn + referralsEarnCount) * user.mspoc.grease.greaseXs;
+                console.log({ minedReward });
+            }
             user.balance.isMining = false
             user.balance.minedBalance += minedReward;
             await user.save()
@@ -61,9 +66,9 @@ const balance = async (req, res) => {
             message: "Balance retrieved successfully",
             balance: user.balance,
             referralBonus,
-            dailyEarn,
-            basicRate,
-            totalRate,
+            dailyEarn:dailyEarn * user.mspoc.grease.greaseXs,
+            basicRate:basicRate * user.mspoc.grease.greaseXs,
+            totalRate: totalRate * user.mspoc.grease.greaseXs,
         })
     } catch (error) {
         res.status(500).send({ message: error.message })

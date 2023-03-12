@@ -75,7 +75,24 @@ const UserSchema = new mongoose.Schema({
             type: Date,
             default: null
         },
-
+    },
+    mspoc: {
+        balance: {
+            type: Number,
+            default: 0.0,
+        },
+        histories: {
+            type: Array,
+            default: [],
+        },
+        grease: {
+            greaseXs: {
+                type: Number,
+            },
+            expireDate: {
+                type: String,
+            }
+        }
     }
 },
     { timestamps: true }
