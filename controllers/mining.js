@@ -63,7 +63,7 @@ const balance = async (req, res) => {
         let totalRate = dailyEarn / 24; // earn per hour
 
         console.log(user.mspoc.grease.greaseXs)
-        if (user.mspoc.grease.greaseXs !== null) {
+        if (user.mspoc.grease.greaseXs != undefined || user.mspoc.grease.greaseXs != null) {
             dailyEarn += referralBonus * user.mspoc.grease.greaseXs
             basicRate = dailyEarn / 3600 * user.mspoc.grease.greaseXs; // earn per sec in an hour
             totalRate = dailyEarn / 24 * user.mspoc.grease.greaseXs; // earn per hour
