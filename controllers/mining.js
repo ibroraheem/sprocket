@@ -64,8 +64,7 @@ const balance = async (req, res) => {
         if (user.mspoc.grease.greaseXs !== null) {
             dailyEarn += referralBonus * user.mspoc.grease.greaseXs
             basicRate = dailyEarn / 3600 * user.mspoc.grease.greaseXs; // earn per sec in an hour
-            totalRate = dailyEarn / 24 * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1; // earn per hour
-
+            totalRate = dailyEarn / 24 * user.mspoc.grease.greaseXs; // earn per hour
         }
         // let basicRate = Number(dailyEarn / 86400).toFixed(4); // earn per sec in 24 hour
         res.status(200).send({
