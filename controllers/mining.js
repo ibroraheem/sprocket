@@ -37,7 +37,7 @@ const stopMining = async (req, res) => {
             let referralsEarnCount = user.referrals.length / 100 * 0.2;
             let minedReward = dailyEarn + referralsEarnCount;
             console.log({ minedReward });
-            if (user.mspoc.grease.expireDate > new Date().getTime()) {
+            if (user.mspoc.grease.expireDate != null && user.mspoc.grease.expireDate > new Date().getTime()) {
                 minedReward = (dailyEarn + referralsEarnCount) * user.mspoc.grease.greaseXs;
                 console.log({ minedReward });
             }
@@ -66,9 +66,9 @@ const balance = async (req, res) => {
             message: "Balance retrieved successfully",
             balance: user.balance,
             referralBonus,
-            dailyEarn:dailyEarn * user.mspoc.grease.greaseXs,
-            basicRate:basicRate * user.mspoc.grease.greaseXs,
-            totalRate: totalRate * user.mspoc.grease.greaseXs,
+            dailyEarn: dailyEarn * user.mspoc.grease.greaseXs ?? 1,
+            basicRate: basicRate * user.mspoc.grease.greaseXs ?? 1,
+            totalRate: totalRate * user.mspoc.grease.greaseXs ?? 1,
         })
     } catch (error) {
         res.status(500).send({ message: error.message })
