@@ -58,10 +58,16 @@ const balance = async (req, res) => {
         const user = await User.findById(decoded.id)
         if (!user) return res.status(401).send({ message: "User not found!" });
         let referralBonus = user.referrals.length / 100 * 0.2; // referral bonus formula total friends / 100 * 0.2
-        dailyEarn += referralBonus * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1;
+        dailyEarn += referralBonus;
+        let basicRate = dailyEarn / 3600; // earn per sec in an hour
+        let totalRate = dailyEarn / 24; // earn per hour
+        if (user.mspoc.grease.greaseXs !== null) {
+            dailyEarn += referralBonus * user.mspoc.grease.greaseXs
+            basicRate = dailyEarn / 3600 * user.mspoc.grease.greaseXs; // earn per sec in an hour
+            totalRate = dailyEarn / 24 * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1; // earn per hour
+
+        }
         // let basicRate = Number(dailyEarn / 86400).toFixed(4); // earn per sec in 24 hour
-        let basicRate = (dailyEarn / 3600) * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1; // earn per sec in an hour
-        let totalRate = (dailyEarn / 24) * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1; // earn per hour
         res.status(200).send({
             message: "Balance retrieved successfully",
             balance: user.balance,
