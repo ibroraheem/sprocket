@@ -66,9 +66,9 @@ const balance = async (req, res) => {
             message: "Balance retrieved successfully",
             balance: user.balance,
             referralBonus,
-            dailyEarn: dailyEarn * user.mspoc.grease.greaseXs ?? 1,
-            basicRate: basicRate * user.mspoc.grease.greaseXs ?? 1,
-            totalRate: totalRate * user.mspoc.grease.greaseXs ?? 1,
+            dailyEarn: dailyEarn * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1,
+            basicRate: basicRate * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1,
+            totalRate: totalRate * user.mspoc.grease.greaseXs != null ? user.mspoc.grease.greaseXs : 1,
         })
     } catch (error) {
         res.status(500).send({ message: error.message })
